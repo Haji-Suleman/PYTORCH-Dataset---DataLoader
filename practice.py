@@ -9,15 +9,9 @@ import seaborn as sns
 
 sns.set(style="whitegrid")
 
-# ----------------------------
-# 1️⃣ Load dataset
-# ----------------------------
 data = pd.read_csv("heart.csv")
 
 
-# ----------------------------
-# 2️⃣ Custom Dataset
-# ----------------------------
 class HeartDataSet(Dataset):
     def __init__(self, file_path):
         data_np = np.loadtxt(file_path, delimiter=",", skiprows=1)
@@ -35,9 +29,6 @@ dataset = HeartDataSet("heart.csv")
 X, y = dataset.X, dataset.y
 print(f"Features shape: {X.shape}, Labels shape: {y.shape}")
 
-# ----------------------------
-# 3️⃣ Train/Test Split
-# ----------------------------
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
@@ -49,9 +40,6 @@ train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
 
 
-# ----------------------------
-# 4️⃣ Define Model
-# ----------------------------
 class HeartModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -72,15 +60,9 @@ class HeartModel(nn.Module):
 torch.manual_seed(42)
 model = HeartModel()
 
-# ----------------------------
-# 5️⃣ Loss + Optimizer
-# ----------------------------
 loss_fn = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
-# ----------------------------
-# 6️⃣ Training Loop
-# ----------------------------
 epochs = 200
 train_losses, test_losses = [], []
 train_accs, test_accs = [], []
@@ -134,9 +116,6 @@ for epoch in range(epochs):
             f"Epoch {epoch+1}/{epochs} | Train Loss: {train_loss:.4f} | Test Loss: {test_loss:.4f}"
         )
 
-# ----------------------------
-# 7️⃣ Plot Loss
-# ----------------------------
 plt.figure(figsize=(10, 5))
 plt.plot(train_losses, label="Train Loss")
 plt.plot(test_losses, label="Test Loss")
