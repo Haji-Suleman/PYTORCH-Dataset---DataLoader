@@ -57,21 +57,58 @@ print(X.shape)
 print(y.shape)
 
 
-X_train, y_train, X_test, y_test = train_test_split(
+X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
+train_dataset = torch.utils.data.TensorDataset(X_train, y_train)
+test_dataset = torch.utils.data.TensorDataset(X_test, y_test)
 
-class HeartModel(torch.nn.Module):
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
+
+
+class HeartModel(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(in_features=13, out_features=42),
+            nn.Linear(13, 42),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(in_features=42, out_features=13),
+            nn.Linear(42, 13),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(in_features=13, out_features=1),
-            nn.Sigmoid(),
+            nn.Linear(13, 1),
         )
+
+    def forward(self, X):
+        return self.model(X)
+
+
+torch.manual_seed(42)
+model = HeartModel()
+
+loss_fn = nn.BCEWithLogitsLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+epochs = 10
+
+for epoch in range(epochs):
+    model.train()
+    for X_batch, y_batch in train_loader:
+        logits = model(X_batch)
+        loss = loss_fn(logits, y_batch)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    with torch.inference_mode():
+        test_loss = 0
+        for X_batch, y_batch in test_loader:
+            logits = model(X_batch)
+            loss = loss_fn(logits, y_batch)
+            test_loss += loss
+
+    print(f"Epoch {epoch+1} | Train Loss {loss:.4f} | Test Loss {test_loss:.4f}")
