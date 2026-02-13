@@ -37,3 +37,13 @@ n_iteration = total_samples // 4
 
 print(total_samples, n_iteration)
 
+
+num_epochs = 2
+
+for epoch in range(num_epochs):
+    for i, (input, labels) in enumerate(dataloader):
+        if (i + 1) % 5 == 0:
+            print(
+                f"Epoch: {epoch+1}/{num_epochs}, Step {i+1}/{n_iteration}|\
+                Inputs {input.shape} | Labels {labels.shape}"
+            )
