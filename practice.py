@@ -18,3 +18,15 @@ class HeartDataSet:
 
     def __getitem__(self, index):
         return self.X[index], self.y[index]
+
+    def __len__(self):
+        return self.n_samples
+
+
+dataset = HeartDataSet()
+
+firstData = dataset[0]
+
+features, labels = firstData
+
+print(firstData)
