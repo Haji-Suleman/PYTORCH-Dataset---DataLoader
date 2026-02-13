@@ -3,6 +3,8 @@ import torchvision
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import math
+from sklearn.model_selection import train_test_split
+from torch import nn
 
 
 class HeartDataSet(Dataset):
@@ -53,3 +55,23 @@ num_epochs = 2
 
 print(X.shape)
 print(y.shape)
+
+
+X_train, y_train, X_test, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+
+class HeartModel(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(in_features=13, out_features=42),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(in_features=42, out_features=13),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(in_features=13, out_features=1),
+            nn.Sigmoid(),
+        )
