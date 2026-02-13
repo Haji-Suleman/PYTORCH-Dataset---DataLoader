@@ -24,7 +24,8 @@ dataset = HeartDataSet()
 firstData = dataset[0]
 
 features, labels = firstData
-
+X = dataset.X
+y = dataset.y
 
 dataloader = DataLoader(dataset=dataset, batch_size=4, shuffle=True)
 
@@ -37,12 +38,18 @@ print(total_batches, n_iteration)
 
 num_epochs = 2
 
-for epoch in range(num_epochs):
-    for i, (inputs, labels) in enumerate(dataloader):
-        if (i + 1) % 5 == 0:
-            print(
-                f"Epoch {epoch+1}/{num_epochs} | "
-                f"Step {i+1}/{total_batches} | "
-                f"Inputs {inputs.shape} | "
-                f"Labels {labels.shape}"
-            )
+# for epoch in range(num_epochs):
+#     for i, (inputs, labels) in enumerate(dataloader):
+#         if (i + 1) % 5 == 0:
+# print(
+#     f"Epoch {epoch+1}/{num_epochs} | "
+#     f"Step {i+1}/{total_batches} | "
+#     f"Inputs {inputs.shape} | "
+#     f"Labels {labels.shape}"
+# )
+
+
+## Training Data
+
+print(X.shape)
+print(y.shape)
