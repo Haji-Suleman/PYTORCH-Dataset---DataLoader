@@ -5,14 +5,11 @@ import numpy as np
 import math
 
 
-class HeartDataSet:
+class HeartDataSet(Dataset):
     def __init__(self):
-
-        # Loading Csv files using numpy
         data = np.loadtxt("heart.csv", delimiter=",", skiprows=1)
-        # Class Labels
-        self.X = torch.from_numpy(data[:, :13])
-        self.y = torch.from_numpy(data[:, [13]])
+        self.X = torch.from_numpy(data[:, :13]).float()
+        self.y = torch.from_numpy(data[:, [13]]).float()
         self.n_samples = data.shape[0]
 
     def __getitem__(self, index):
@@ -31,19 +28,21 @@ features, labels = firstData
 
 dataloader = DataLoader(dataset=dataset, batch_size=4, shuffle=True)
 
-total_samples = len(dataloader)
+total_batches = len(dataloader)
 
-n_iteration = total_samples // 4
+n_iteration = total_batches // 4
 
-print(total_samples, n_iteration)
+print(total_batches, n_iteration)
 
 
 num_epochs = 2
 
 for epoch in range(num_epochs):
-    for i, (input, labels) in enumerate(dataloader):
+    for i, (inputs, labels) in enumerate(dataloader):
         if (i + 1) % 5 == 0:
             print(
-                f"Epoch: {epoch+1}/{num_epochs}, Step {i+1}/{n_iteration}|\
-                Inputs {input.shape} | Labels {labels.shape}"
+                f"Epoch {epoch+1}/{num_epochs} | "
+                f"Step {i+1}/{total_batches} | "
+                f"Inputs {inputs.shape} | "
+                f"Labels {labels.shape}"
             )
